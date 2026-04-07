@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>ÉLITE RIDES — Sistema Completo</title>
+
+<!-- ══ PWA ══ -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#C9A84C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Élite Rides">
+<meta name="application-name" content="Élite Rides">
+<meta name="description" content="Sistema de gestión de viajes de lujo ÉLITE Rides">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<!-- iOS Splash Screens -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-startup-image" href="./splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
+<link rel="apple-touch-startup-image" href="./splash-1668x2224.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)">
+<link rel="apple-touch-startup-image" href="./splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)">
+<link rel="apple-touch-startup-image" href="./splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
+<link rel="apple-touch-startup-image" href="./splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
+<!-- Viewport fit para notch de iPhone -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Raleway:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D5A3;
+  --gold-dark: #8B6914;
+  --black: #070707;
+  --dark: #0E0E0E;
+  --surface: #141414;
+  --surface2: #1C1C1C;
+  --surface3: #232323;
+  --text: #F0EAD6;
+  --muted: #6A6460;
+  --muted2: #9A9088;
+  --green-wa: #25D366;
+  --red: #E05A5A;
+  --blue: #5A9BE0;
+  --border: rgba(201,168,76,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Raleway',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;border-bottom:1px solid var(--border);background:rgba(7,7,7,0.95);backdrop-filter:blur(16px);position:sticky;top:0;z-index:500;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.3em;color:var(--gold);font-weight:300;}
+.logo span{color:var(--text);font-style:italic;}
+.tabs{display:flex;gap:2px;}
+.tab{padding:8px 20px;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .25s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Raleway',sans-serif;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.notif-dot{position:relative;cursor:pointer;}
+.notif-dot::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:.5rem;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;}
+.admin-badge{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:4px 10px;}
+
+/* ── PAGES ── */
+.page{display:none;animation:fadeIn .35s ease both;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════════════════
+   PAGE 1 – BOOKING
+════════════════════════════ */
+.booking-layout{display:grid;grid-template-columns:1fr 460px;min-height:calc(100vh - 60px);}
+
+/* LEFT */
+.booking-left{padding:52px 56px;display:flex;flex-direction:column;justify-content:center;}
+.eyebrow{font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,5vw,4.8rem);font-weight:300;line-height:1.05;margin-bottom:24px;}
+h1 em{font-style:italic;color:var(--gold);}
+.hero-desc{font-size:.85rem;color:var(--muted2);line-height:1.85;max-width:380px;margin-bottom:44px;}
+
+/* MAP PREVIEW */
+.map-preview{background:var(--surface2);border:1px solid var(--border);height:220px;position:relative;overflow:hidden;margin-bottom:28px;}
+.map-bg{width:100%;height:100%;background:linear-gradient(135deg,#0a0a0a 0%,#111 50%,#0d0d0d 100%);position:relative;}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:28px 28px;}
+.map-road{position:absolute;background:rgba(201,168,76,.12);border-radius:2px;}
+.map-road.h1{width:100%;height:3px;top:45%;left:0;}
+.map-road.h2{width:100%;height:2px;top:70%;left:0;}
+.map-road.v1{width:2px;height:100%;top:0;left:30%;}
+.map-road.v2{width:3px;height:100%;top:0;left:65%;}
+.map-route{position:absolute;top:40%;left:20%;width:50%;height:2px;background:linear-gradient(90deg,var(--gold),rgba(201,168,76,.3));border-radius:2px;animation:routePulse 2s ease-in-out infinite;}
+@keyframes routePulse{0%,100%{opacity:.6}50%{opacity:1}}
+.map-pin{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid;}
+.map-pin.origin{background:var(--gold);border-color:var(--gold-light);top:calc(40% - 4px);left:20%;animation:pingOrigin 2s ease infinite;}
+.map-pin.dest{background:var(--red);border-color:#F09090;top:calc(40% - 4px);left:70%;}
+@keyframes pingOrigin{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4)}50%{box-shadow:0 0 0 8px rgba(201,168,76,0)}}
+.map-info{position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,.88);backdrop-filter:blur(8px);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);}
+.map-dist{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);}
+.map-time{font-size:.65rem;color:var(--muted2);letter-spacing:.1em;}
+.map-label{font-size:.55rem;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);}
+
+/* PANEL */
+.booking-panel{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
+.panel-head{padding:28px 32px 20px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;}
+.panel-sub{font-size:.62rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:3px;}
+.panel-body{padding:28px 32px;flex:1;}
+
+/* VEHICLE CARDS */
+.sec-label{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.vehicles{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:24px;}
+.vc{border:1px solid var(--border);background:var(--dark);padding:12px 8px;text-align:center;cursor:pointer;transition:all .25s;position:relative;}
+.vc:hover{border-color:rgba(201,168,76,.35);}
+.vc.active{border-color:var(--gold);background:rgba(201,168,76,.05);}
+.vc.active::after{content:'✓';position:absolute;top:4px;right:6px;font-size:.55rem;color:var(--gold);}
+.vc-icon{font-size:1.3rem;margin-bottom:5px;}
+.vc-name{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text);}
+.vc-cap{font-size:.58rem;color:var(--muted);margin-top:2px;}
+
+/* FORM */
+.fg{margin-bottom:14px;}
+label{display:block;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+input,select,textarea{width:100%;background:var(--dark);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:'Raleway',sans-serif;font-size:.8rem;font-weight:300;outline:none;transition:border-color .25s;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+input::placeholder,textarea::placeholder{color:var(--muted);}
+select option{background:var(--dark);}
+textarea{resize:vertical;min-height:60px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ADDRESS WITH SUGGESTION */
+.addr-wrap{position:relative;}
+.addr-sug{position:absolute;top:100%;left:0;right:0;background:var(--surface3);border:1px solid var(--border);border-top:none;z-index:200;display:none;}
+.addr-sug.show{display:block;}
+.sug-item{padding:9px 14px;font-size:.75rem;color:var(--muted2);cursor:pointer;border-bottom:1px solid rgba(201,168,76,.06);transition:background .2s;}
+.sug-item:hover{background:rgba(201,168,76,.06);color:var(--text);}
+
+/* EXTRAS */
+.extras{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.xtag{border:1px solid var(--border);padding:5px 12px;font-size:.62rem;letter-spacing:.08em;color:var(--muted);cursor:pointer;transition:all .22s;user-select:none;}
+.xtag:hover{border-color:rgba(201,168,76,.4);color:var(--text);}
+.xtag.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05);}
+
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.15),transparent);margin:18px 0;}
+
+/* PRICE */
+.price-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;}
+.price-breakdown{font-size:.62rem;color:var(--muted);line-height:1.7;}
+.price-val{font-family:'Cormorant Garamond',serif;font-size:2.1rem;color:var(--gold);text-align:right;}
+.price-val small{font-size:.75rem;color:var(--muted);}
+
+/* BUTTONS */
+.wa-btn{width:100%;background:var(--green-wa);color:#fff;border:none;padding:14px 20px;font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;}
+.wa-btn:hover{filter:brightness(1.1);}
+.wa-icon{width:18px;height:18px;fill:white;flex-shrink:0;}
+
+/* CALENDAR MINI */
+.cal-mini{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;}
+.cal-day{flex-shrink:0;width:44px;text-align:center;padding:8px 4px;border:1px solid var(--border);cursor:pointer;transition:all .22s;}
+.cal-day:hover{border-color:rgba(201,168,76,.4);}
+.cal-day.selected{border-color:var(--gold);background:rgba(201,168,76,.07);}
+.cal-day.unavail{opacity:.35;pointer-events:none;}
+.cal-day .dow{font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px;}
+.cal-day .dom{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text);}
+.cal-day.selected .dom{color:var(--gold);}
+.cal-day .slots{font-size:.5rem;color:var(--muted);margin-top:2px;}
+.cal-day.selected .slots{color:var(--gold-dark);}
+
+/* ════════════════════════════
+   PAGE 2 – CALENDAR
+════════════════════════════ */
+.cal-page{padding:36px 44px;}
+.page-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;}
+.page-title span{color:var(--gold);font-style:italic;}
+.month-nav{display:flex;align-items:center;gap:16px;}
+.mn-btn{background:none;border:1px solid var(--border);color:var(--muted2);width:32px;height:32px;cursor:pointer;font-size:.9rem;transition:all .22s;}
+.mn-btn:hover{border-color:var(--gold);color:var(--gold);}
+.month-label{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--text);min-width:160px;text-align:center;}
+
+.cal-grid-wrap{display:grid;grid-template-columns:1fr 300px;gap:24px;}
+.cal-full{border:1px solid var(--border);}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);}
+.cal-head-cell{padding:10px;text-align:center;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.cal-body{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:90px;padding:8px;cursor:pointer;transition:background .2s;position:relative;}
+.cal-cell:nth-child(7n){border-right:none;}
+.cal-cell:hover{background:rgba(201,168,76,.03);}
+.cal-cell.other-month .cell-num{color:var(--muted);}
+.cal-cell.today{background:rgba(201,168,76,.04);}
+.cal-cell.today .cell-num{color:var(--gold);}
+.cal-cell.selected{background:rgba(201,168,76,.07);outline:1px solid rgba(201,168,76,.3);}
+.cell-num{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:4px;}
+.cell-event{background:rgba(201,168,76,.15);border-left:2px solid var(--gold);padding:2px 5px;font-size:.55rem;color:var(--gold-light);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cell-event.confirmed{border-color:#5AE09A;background:rgba(90,224,154,.1);color:#5AE09A;}
+.cell-event.pending{border-color:var(--gold);background:rgba(201,168,76,.12);color:var(--gold-light);}
+.cell-event.cancelled{border-color:var(--red);background:rgba(224,90,90,.1);color:#F09090;text-decoration:line-through;}
+
+/* DAY DETAIL */
+.day-detail{background:var(--surface);border:1px solid var(--border);padding:24px;}
+.dd-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:4px;}
+.dd-sub{font-size:.6rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:20px;}
+.dd-event{padding:12px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer;transition:border-color .2s;}
+.dd-event:hover{border-color:rgba(201,168,76,.4);}
+.dd-ev-time{font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:4px;}
+.dd-ev-name{font-size:.82rem;color:var(--text);margin-bottom:2px;}
+.dd-ev-route{font-size:.68rem;color:var(--muted2);}
+.dd-ev-badge{display:inline-block;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;margin-top:6px;}
+.badge-pending{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.3);}
+.badge-confirmed{background:rgba(90,224,154,.1);color:#5AE09A;border:1px solid rgba(90,224,154,.3);}
+.badge-cancelled{background:rgba(224,90,90,.1);color:#F09090;border:1px solid rgba(224,90,90,.3);}
+
+/* ════════════════════════════
+   PAGE 3 – ADMIN
+════════════════════════════ */
+.admin-page{padding:36px 44px;}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+.kpi{background:var(--surface);border:1px solid var(--border);padding:20px 24px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.kpi-label{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--text);}
+.kpi-val span{font-size:.9rem;color:var(--gold);}
+.kpi-delta{font-size:.62rem;color:#5AE09A;margin-top:4px;}
+.kpi-delta.down{color:var(--red);}
+
+/* ORDERS TABLE */
+.table-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.table-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;}
+.table-actions{display:flex;gap:10px;}
+.t-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 16px;font-family:'Raleway',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .22s;}
+.t-btn:hover{border-color:var(--gold);color:var(--gold);}
+.t-btn.primary{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:600;}
+.t-btn.primary:hover{background:var(--gold-light);}
+
+.filter-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.filter-chip{padding:5px 14px;border:1px solid var(--border);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .22s;}
+.filter-chip:hover{border-color:rgba(201,168,76,.4);color:var(--text);}
+.filter-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);}
+
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{text-align:left;padding:10px 14px;font-size:.57rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--border);font-weight:400;}
+.data-table td{padding:12px 14px;font-size:.78rem;border-bottom:1px solid rgba(201,168,76,.06);color:var(--muted2);vertical-align:middle;}
+.data-table tr:hover td{background:rgba(201,168,76,.025);color:var(--text);}
+.data-table .name-cell{color:var(--text);font-weight:400;}
+.data-table .route-cell{font-size:.7rem;}
+.status-pill{display:inline-block;padding:3px 10px;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;}
+.sp-pending{background:rgba(201,168,76,.12);color:var(--gold);}
+.sp-confirmed{background:rgba(90,224,154,.1);color:#5AE09A;}
+.sp-cancelled{background:rgba(224,90,90,.1);color:#F09090;}
+.sp-completed{background:rgba(90,154,224,.1);color:#90C0F0;}
+.act-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;font-size:.58rem;cursor:pointer;transition:all .2s;margin-right:4px;font-family:'Raleway',sans-serif;}
+.act-btn:hover{border-color:var(--gold);color:var(--gold);}
+.act-btn.danger:hover{border-color:var(--red);color:var(--red);}
+.act-btn.wa:hover{border-color:var(--green-wa);color:var(--green-wa);}
+
+/* ════════════════════════════
+   PAGE 4 – BOT WHATSAPP
+════════════════════════════ */
+.bot-page{padding:36px 44px;display:grid;grid-template-columns:340px 1fr;gap:24px;}
+
+.bot-sidebar{background:var(--surface);border:1px solid var(--border);}
+.bot-sidebar-head{padding:20px 24px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.bot-sidebar-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;}
+.bot-sidebar-sub{font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
+.bot-conv-list{overflow-y:auto;max-height:calc(100vh - 200px);}
+.bot-conv{padding:14px 20px;border-bottom:1px solid rgba(201,168,76,.06);cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:12px;}
+.bot-conv:hover{background:rgba(201,168,76,.04);}
+.bot-conv.active{background:rgba(201,168,76,.08);}
+.conv-avatar{width:38px;height:38px;border-radius:50%;background:var(--surface3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.conv-info{flex:1;min-width:0;}
+.conv-name{font-size:.78rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.conv-last{font-size:.65rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.conv-time{font-size:.55rem;color:var(--muted);flex-shrink:0;}
+.conv-unread{background:var(--green-wa);color:#fff;font-size:.5rem;font-weight:600;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* CHAT */
+.bot-chat{background:var(--surface);border:1px solid var(--border);display:flex;flex-direction:column;}
+.chat-head{padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:14px;}
+.chat-avatar{width:38px;height:38px;border-radius:50%;background:var(--surface3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.chat-name{font-size:.88rem;color:var(--text);}
+.chat-status{font-size:.6rem;color:var(--green-wa);}
+.chat-status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green-wa);margin-right:5px;}
+.chat-actions{margin-left:auto;display:flex;gap:8px;}
+.chat-act-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 12px;font-size:.6rem;font-family:'Raleway',sans-serif;letter-spacing:.1em;cursor:pointer;transition:all .22s;text-transform:uppercase;}
+.chat-act-btn:hover{border-color:var(--gold);color:var(--gold);}
+.chat-act-btn.wa-green{border-color:var(--green-wa);color:var(--green-wa);}
+
+.chat-messages{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 280px);}
+.msg{max-width:72%;padding:10px 14px;font-size:.78rem;line-height:1.55;}
+.msg.bot{background:var(--surface3);border:1px solid var(--border);align-self:flex-start;border-radius:0 8px 8px 8px;}
+.msg.user{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.2);align-self:flex-end;text-align:right;border-radius:8px 0 8px 8px;}
+.msg .msg-time{font-size:.55rem;color:var(--muted);margin-top:5px;}
+.msg .msg-sender{font-size:.58rem;color:var(--gold);margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase;}
+.msg-options{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.msg-opt{border:1px solid rgba(37,211,102,.3);color:#5AE09A;padding:4px 10px;font-size:.62rem;cursor:pointer;transition:all .2s;}
+.msg-opt:hover{background:rgba(37,211,102,.1);}
+
+.chat-input-area{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;}
+.chat-input{flex:1;background:var(--dark);border:1px solid var(--border);color:var(--text);padding:10px 14px;font-family:'Raleway',sans-serif;font-size:.8rem;outline:none;transition:border-color .22s;}
+.chat-input:focus{border-color:var(--gold);}
+.chat-input::placeholder{color:var(--muted);}
+.send-btn{background:var(--green-wa);border:none;color:#fff;padding:10px 18px;font-family:'Raleway',sans-serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:filter .22s;}
+.send-btn:hover{filter:brightness(1.1);}
+
+/* BOT CONFIG */
+.bot-config{background:var(--surface);border:1px solid var(--border);padding:24px;margin-top:20px;}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.config-item{background:var(--dark);border:1px solid var(--border);padding:16px;}
+.config-item-title{font-size:.68rem;color:var(--text);margin-bottom:6px;}
+.config-item-val{font-size:.72rem;color:var(--muted2);}
+.toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.06);}
+.toggle-label{font-size:.75rem;color:var(--muted2);}
+.toggle-switch{width:36px;height:20px;background:var(--surface3);border:1px solid var(--border);border-radius:10px;position:relative;cursor:pointer;transition:background .25s;}
+.toggle-switch.on{background:rgba(37,211,102,.3);border-color:var(--green-wa);}
+.toggle-switch::after{content:'';position:absolute;width:14px;height:14px;background:var(--muted);border-radius:50%;top:2px;left:2px;transition:all .25s;}
+.toggle-switch.on::after{left:18px;background:var(--green-wa);}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--surface2);border:1px solid var(--gold);color:var(--text);padding:14px 22px;font-size:.75rem;letter-spacing:.05em;transform:translateY(60px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:10000;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);padding:32px;width:500px;max-width:95vw;animation:fadeIn .3s ease;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:6px;}
+.modal-sub{font-size:.65rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:var(--black);z-index:3000;display:flex;align-items:center;justify-content:center;}
+.login-box{background:var(--surface);border:1px solid var(--border);padding:48px 40px;width:360px;text-align:center;animation:fadeIn .4s ease;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);letter-spacing:.3em;margin-bottom:6px;}
+.login-logo span{color:var(--text);font-style:italic;}
+.login-sub{font-size:.6rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-bottom:32px;}
+.login-err{font-size:.7rem;color:var(--red);margin-top:12px;display:none;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .booking-layout{grid-template-columns:1fr;}
+  .booking-left{padding:32px 24px;}
+  .panel-body,.panel-head{padding:20px 20px;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .cal-grid-wrap{grid-template-columns:1fr;}
+  .bot-page{grid-template-columns:1fr;}
+  .bot-sidebar{display:none;}
+  .admin-page,.cal-page{padding:20px 16px;}
+}
+
+/* ══ iOS SAFE AREAS ══ */
+body{
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+.topbar{
+  padding-left: max(40px, env(safe-area-inset-left));
+  padding-right: max(40px, env(safe-area-inset-right));
+  top: env(safe-area-inset-top);
+}
+@supports(-webkit-touch-callout: none){
+  .booking-panel{-webkit-overflow-scrolling: touch;}
+  .chat-messages{-webkit-overflow-scrolling: touch;}
+  input,select,textarea{font-size:16px;} /* evita zoom en iOS */
+}
+
+/* ══ SPLASH SCREEN ══ */
+#splash{
+  position:fixed;inset:0;background:var(--black);z-index:99999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease, transform .6s ease;
+}
+#splash.hide{opacity:0;transform:scale(1.04);pointer-events:none;}
+.splash-logo{
+  font-family:'Cormorant Garamond',serif;font-size:3rem;letter-spacing:.4em;
+  color:var(--gold);font-weight:300;animation:splashPulse 1.8s ease infinite;
+}
+.splash-logo span{color:var(--text);font-style:italic;}
+.splash-tagline{
+  font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;
+  color:var(--muted);margin-top:12px;
+}
+.splash-bar{
+  width:120px;height:1px;background:var(--border);margin-top:40px;overflow:hidden;position:relative;
+}
+.splash-bar::after{
+  content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  animation:splashLoad 1.4s ease forwards;
+}
+@keyframes splashPulse{0%,100%{opacity:.8}50%{opacity:1}}
+@keyframes splashLoad{0%{left:-100%}100%{left:100%}}
+
+/* ══ NOTIFICACIONES ══ */
+#notif-panel{
+  position:fixed;top:70px;right:20px;width:320px;
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:0 16px 48px rgba(0,0,0,.7);z-index:1500;
+  display:none;animation:fadeIn .25s ease;
+  max-height:420px;overflow-y:auto;
+}
+#notif-panel.show{display:block;}
+.notif-panel-head{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--surface2);position:sticky;top:0;
+}
+.notif-panel-title{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.notif-clear{font-size:.58rem;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'Raleway',sans-serif;}
+.notif-clear:hover{color:var(--text);}
+.notif-item{
+  padding:14px 18px;border-bottom:1px solid rgba(201,168,76,.06);
+  cursor:pointer;transition:background .2s;display:flex;gap:12px;align-items:flex-start;
+}
+.notif-item:hover{background:rgba(201,168,76,.04);}
+.notif-item.unread{border-left:2px solid var(--gold);}
+.notif-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px;}
+.notif-text{flex:1;}
+.notif-title-text{font-size:.75rem;color:var(--text);margin-bottom:3px;}
+.notif-desc{font-size:.65rem;color:var(--muted2);line-height:1.4;}
+.notif-time{font-size:.55rem;color:var(--muted);margin-top:4px;}
+.notif-empty{padding:28px;text-align:center;font-size:.7rem;color:var(--muted);}
+
+/* ══ OFFLINE BANNER ══ */
+#offline-banner{
+  position:fixed;top:0;left:0;right:0;
+  background:linear-gradient(90deg,#1a0a0a,#2a1010);
+  border-bottom:1px solid var(--red);
+  padding:10px 20px;text-align:center;
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+  color:#F09090;z-index:9997;
+  transform:translateY(-100%);transition:transform .4s ease;
+}
+#offline-banner.show{transform:translateY(0);}
+
+/* ══ SYNC INDICATOR ══ */
+#sync-indicator{
+  position:fixed;bottom:28px;left:28px;
+  background:var(--surface2);border:1px solid var(--border);
+  padding:8px 14px;font-size:.6rem;letter-spacing:.1em;
+  color:var(--muted2);display:flex;align-items:center;gap:8px;
+  opacity:0;transition:opacity .4s;pointer-events:none;z-index:9996;
+}
+#sync-indicator.show{opacity:1;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);
+  animation:syncBlink 1s ease infinite;}
+@keyframes syncBlink{0%,100%{opacity:1}50%{opacity:.2}}
+</style>
+</head>
+<body>
+
+<!-- ══ SPLASH SCREEN ══ -->
+<div id="splash">
+  <div class="splash-logo">ÉLITE <span>Rides</span></div>
+  <div class="splash-tagline">Traslados de lujo · Sistema operativo</div>
+  <div class="splash-bar"></div>
+</div>
+
+<!-- ══ OFFLINE BANNER ══ -->
+<div id="offline-banner">⚡ Sin conexión — trabajando en modo offline</div>
+
+<!-- ══ SYNC INDICATOR ══ -->
+<div id="sync-indicator"><div class="sync-dot"></div>Sincronizando...</div>
+
+<!-- ══ NOTIFICATION PANEL ══ -->
+<div id="notif-panel">
+  <div class="notif-panel-head">
+    <div class="notif-panel-title">Notificaciones</div>
+    <button class="notif-clear" onclick="clearNotifs()">Marcar todo leído</button>
+  </div>
+  <div id="notif-list"></div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">ÉLITE <span>Rides</span></div>
+    <div class="login-sub">Panel de Operaciones</div>
+    <div class="fg"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" /></div>
+    <div class="fg"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••" /></div>
+    <button class="wa-btn" style="background:var(--gold);color:var(--black);margin-top:8px;" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="loginErr">Credenciales incorrectas</div>
+    <div style="margin-top:20px;font-size:.6rem;color:var(--muted);">Demo: admin / 1234</div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">ÉLITE <span>Rides</span></div>
+  <div class="tabs">
+    <button class="tab active" onclick="showPage('booking',this)">Reservar</button>
+    <button class="tab" onclick="showPage('calendar',this)">Calendario</button>
+    <button class="tab" onclick="showPage('admin',this)">Admin</button>
+    <button class="tab" onclick="showPage('bot',this)">Bot WhatsApp</button>
+  </div>
+  <div class="topbar-right">
+    <div class="notif-dot" data-count="3" title="Notificaciones" id="notifBell" onclick="toggleNotifPanel()">🔔</div>
+    <div class="admin-badge">Operador</div>
+  </div>
+</div>
+
+<!-- ══════════ PAGE: BOOKING ══════════ -->
+<div class="page active" id="page-booking">
+<div class="booking-layout">
+  <div class="booking-left">
+    <div class="eyebrow">Traslados Premium</div>
+    <h1>El viaje<br>perfecto,<br><em>ahora.</em></h1>
+    <p class="hero-desc">Reservá tu traslado en segundos. Calculamos la ruta y el precio en tiempo real, y te conectamos con tu chofer directamente por WhatsApp.</p>
+
+    <!-- MAP PREVIEW -->
+    <div class="map-preview" id="mapPreview">
+      <div class="map-bg">
+        <div class="map-grid"></div>
+        <div class="map-road h1"></div>
+        <div class="map-road h2"></div>
+        <div class="map-road v1"></div>
+        <div class="map-road v2"></div>
+        <div class="map-route" id="mapRoute"></div>
+        <div class="map-pin origin" id="pinOrigin"></div>
+        <div class="map-pin dest" id="pinDest" style="display:none;"></div>
+      </div>
+      <div class="map-info">
+        <div>
+          <div class="map-label">Distancia estimada</div>
+          <div class="map-dist" id="mapDist">— km</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="map-label">Tiempo</div>
+          <div class="map-time" id="mapTime">— min</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="map-label">Tarifa</div>
+          <div class="map-dist" id="mapFare">$—</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:.58rem;color:var(--muted);letter-spacing:.1em;">
+      ⚡ Para activar Google Maps real, agregá tu API Key en la configuración
+    </div>
+  </div>
+
+  <!-- BOOKING PANEL -->
+  <div class="booking-panel">
+    <div class="panel-head">
+      <div class="panel-title">Nueva Reserva</div>
+      <div class="panel-sub">Confirmación instantánea por WhatsApp</div>
+    </div>
+    <div class="panel-body">
+
+      <div class="sec-label">Tipo de vehículo</div>
+      <div class="vehicles">
+        <div class="vc active" onclick="selectVehicle(this,'Sedán Premium')">
+          <div class="vc-icon">🚗</div><div class="vc-name">Sedán</div><div class="vc-cap">1–4 pas.</div>
+        </div>
+        <div class="vc" onclick="selectVehicle(this,'SUV Ejecutiva')">
+          <div class="vc-icon">🚙</div><div class="vc-name">SUV</div><div class="vc-cap">1–6 pas.</div>
+        </div>
+        <div class="vc" onclick="selectVehicle(this,'Van de Lujo')">
+          <div class="vc-icon">🚐</div><div class="vc-name">Van</div><div class="vc-cap">1–9 pas.</div>
+        </div>
+      </div>
+
+      <!-- DATE SELECTOR (mini calendar) -->
+      <div class="sec-label">Fecha</div>
+      <div class="cal-mini" id="miniCal"></div>
+
+      <div class="fg">
+        <label>Hora de partida</label>
+        <input id="f-time" type="time" value="09:00" onchange="updateMapCalc()" />
+      </div>
+
+      <div class="fg">
+        <label>Nombre completo</label>
+        <input id="f-name" type="text" placeholder="Ej. Carlos Mendoza" />
+      </div>
+
+      <div class="fg">
+        <label>WhatsApp</label>
+        <input id="f-phone" type="tel" placeholder="+54 9 11 XXXX XXXX" />
+      </div>
+
+      <div class="fg">
+        <label>Origen</label>
+        <div class="addr-wrap">
+          <input id="f-origin" type="text" placeholder="Dirección de partida" oninput="showSuggestions('sug-origin',this.value)" onblur="hideSug('sug-origin')" />
+          <div class="addr-sug" id="sug-origin"></div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Destino</label>
+        <div class="addr-wrap">
+          <input id="f-dest" type="text" placeholder="Dirección de llegada" oninput="showSuggestions('sug-dest',this.value)" onblur="hideSug('sug-dest')" />
+          <div class="addr-sug" id="sug-dest"></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="fg">
+          <label>Pasajeros</label>
+          <select id="f-pax">
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6+</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Tipo de viaje</label>
+          <select id="f-type">
+            <option>Solo ida</option>
+            <option>Ida y vuelta</option>
+            <option>Por hora</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sec-label">Servicios adicionales</div>
+      <div class="extras">
+        <div class="xtag" onclick="toggleExtra(this)">🥂 Bebidas</div>
+        <div class="xtag" onclick="toggleExtra(this)">🌸 Aroma</div>
+        <div class="xtag" onclick="toggleExtra(this)">🎵 Música</div>
+        <div class="xtag" onclick="toggleExtra(this)">📶 WiFi</div>
+        <div class="xtag" onclick="toggleExtra(this)">🧳 Equipaje</div>
+        <div class="xtag" onclick="toggleExtra(this)">✈️ Aeropuerto</div>
+      </div>
+
+      <div class="fg">
+        <label>Notas especiales</label>
+        <textarea id="f-notes" placeholder="Requerimientos, ruta preferida…"></textarea>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="price-row">
+        <div>
+          <div style="font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:4px;">TARIFA ESTIMADA</div>
+          <div id="vehicle-name-display" style="font-size:.78rem;color:var(--text);">Sedán Premium</div>
+          <div class="price-breakdown" id="price-breakdown">Base: $1.800</div>
+        </div>
+        <div class="price-val">$<span id="price-display">1.800</span></div>
+      </div>
+
+      <button class="wa-btn" onclick="sendWhatsApp()">
+        <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Confirmar por WhatsApp
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ PAGE: CALENDAR ══════════ -->
+<div class="page" id="page-calendar">
+<div class="cal-page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow" style="margin-bottom:8px;">Agenda de Viajes</div>
+      <div class="page-title">Calendario de <span>Reservas</span></div>
+    </div>
+    <div class="month-nav">
+      <button class="mn-btn" onclick="changeMonth(-1)">‹</button>
+      <div class="month-label" id="monthLabel"></div>
+      <button class="mn-btn" onclick="changeMonth(1)">›</button>
+    </div>
+  </div>
+  <div class="cal-grid-wrap">
+    <div>
+      <div class="cal-full">
+        <div class="cal-head">
+          <div class="cal-head-cell">Dom</div><div class="cal-head-cell">Lun</div>
+          <div class="cal-head-cell">Mar</div><div class="cal-head-cell">Mié</div>
+          <div class="cal-head-cell">Jue</div><div class="cal-head-cell">Vie</div>
+          <div class="cal-head-cell">Sáb</div>
+        </div>
+        <div class="cal-body" id="calBody"></div>
+      </div>
+    </div>
+    <div>
+      <div class="day-detail" id="dayDetail">
+        <div class="dd-title" id="ddTitle">Seleccioná un día</div>
+        <div class="dd-sub" id="ddSub">Haz clic en cualquier fecha</div>
+        <div id="ddEvents"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ PAGE: ADMIN ══════════ -->
+<div class="page" id="page-admin">
+<div class="admin-page">
+  <div class="eyebrow" style="margin-bottom:16px;">Panel de Control</div>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">Pedidos hoy</div>
+      <div class="kpi-val"><span>12</span></div>
+      <div class="kpi-delta">↑ 3 vs ayer</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ingresos del mes</div>
+      <div class="kpi-val">$<span>284.600</span></div>
+      <div class="kpi-delta">↑ 18% vs anterior</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Pendientes</div>
+      <div class="kpi-val"><span style="color:var(--gold)">3</span></div>
+      <div class="kpi-delta down">Requieren atención</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Calificación</div>
+      <div class="kpi-val"><span>4.9</span> ★</div>
+      <div class="kpi-delta">↑ 0.1 este mes</div>
+    </div>
+  </div>
+
+  <div class="table-header">
+    <div class="table-title">Pedidos Recientes</div>
+    <div class="table-actions">
+      <button class="t-btn" onclick="exportCSV()">Exportar CSV</button>
+      <button class="t-btn primary" onclick="openNewOrder()">+ Nuevo pedido</button>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <div class="filter-chip active" onclick="filterOrders('all',this)">Todos</div>
+    <div class="filter-chip" onclick="filterOrders('pending',this)">Pendientes</div>
+    <div class="filter-chip" onclick="filterOrders('confirmed',this)">Confirmados</div>
+    <div class="filter-chip" onclick="filterOrders('completed',this)">Completados</div>
+    <div class="filter-chip" onclick="filterOrders('cancelled',this)">Cancelados</div>
+  </div>
+
+  <table class="data-table" id="ordersTable">
+    <thead>
+      <tr>
+        <th>#</th><th>Cliente</th><th>Fecha / Hora</th>
+        <th>Ruta</th><th>Vehículo</th><th>Tarifa</th>
+        <th>Estado</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody"></tbody>
+  </table>
+
+  <!-- PRICING PANEL -->
+  <div style="margin-top:36px;">
+    <div class="table-header" style="margin-bottom:16px;">
+      <div class="table-title">Tarifas por Vehículo</div>
+      <div class="table-actions">
+        <button class="t-btn primary" onclick="savePricing()">Guardar cambios</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;" id="pricingCards"></div>
+    <div style="margin-top:16px;padding:14px;border:1px solid var(--border);font-size:.65rem;color:var(--muted);line-height:1.7;">
+      💡 <strong style="color:var(--text);">Fórmula:</strong> Tarifa final = Tarifa base + (km × Precio por km) + extras.<br>
+      Los cambios se aplican inmediatamente a nuevas reservas.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ PAGE: BOT WHATSAPP ══════════ -->
+<div class="page" id="page-bot">
+<div class="bot-page">
+  <!-- SIDEBAR -->
+  <div class="bot-sidebar">
+    <div class="bot-sidebar-head">
+      <div class="bot-sidebar-title">Conversaciones</div>
+      <div class="bot-sidebar-sub">Bot activo · 3 sin leer</div>
+    </div>
+    <div class="bot-conv-list" id="convList"></div>
+  </div>
+
+  <!-- CHAT -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="bot-chat">
+      <div class="chat-head">
+        <div class="chat-avatar" id="chatAvatar">👤</div>
+        <div>
+          <div class="chat-name" id="chatName">Seleccioná una conversación</div>
+          <div class="chat-status"><span class="chat-status-dot"></span>En línea · Bot activo</div>
+        </div>
+        <div class="chat-actions">
+          <button class="chat-act-btn" onclick="assignHuman()">Tomar manual</button>
+          <button class="chat-act-btn wa-green" onclick="openWA()">Abrir WA ↗</button>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div style="text-align:center;color:var(--muted);font-size:.75rem;margin-top:40px;">
+          Seleccioná una conversación del panel izquierdo
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input class="chat-input" id="chatInput" placeholder="Escribir mensaje manual…" onkeypress="if(event.key==='Enter')sendManualMsg()" />
+        <button class="send-btn" onclick="sendManualMsg()">Enviar</button>
+      </div>
+    </div>
+
+    <!-- BOT CONFIG -->
+    <div class="bot-config">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:16px;">Configuración del Bot</div>
+      <div class="toggle">
+        <span class="toggle-label">Bot automático activo</span>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle">
+        <span class="toggle-label">Confirmación automática de pedidos</span>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle">
+        <span class="toggle-label">Notificar al chofer por WhatsApp</span>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle">
+        <span class="toggle-label">Recordatorio 1h antes del viaje</span>
+        <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div style="margin-top:16px;font-size:.62rem;color:var(--muted);border:1px solid var(--border);padding:12px;">
+        💡 Para activar el bot real conectá <strong style="color:var(--text);">Twilio</strong> o la <strong style="color:var(--text);">Meta WhatsApp Business API</strong>. 
+        El número de teléfono se configura en el código: <code style="color:var(--gold);">const waNumber = '549...'</code>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MODAL NUEVO PEDIDO -->
+<div class="modal-overlay" id="modalNewOrder">
+  <div class="modal">
+    <div class="modal-title">Nuevo Pedido Manual</div>
+    <div class="modal-sub">Ingresado por operador</div>
+    <div class="fg"><label>Cliente</label><input type="text" id="m-name" placeholder="Nombre completo" /></div>
+    <div class="fg"><label>WhatsApp</label><input type="tel" id="m-phone" placeholder="+54 9 11 …" /></div>
+    <div class="row2">
+      <div class="fg"><label>Fecha</label><input type="date" id="m-date" /></div>
+      <div class="fg"><label>Hora</label><input type="time" id="m-time" value="09:00" /></div>
+    </div>
+    <div class="fg"><label>Origen</label><input type="text" id="m-origin" placeholder="Dirección de partida" /></div>
+    <div class="fg"><label>Destino</label><input type="text" id="m-dest" placeholder="Destino" /></div>
+    <div class="fg">
+      <label>Vehículo</label>
+      <select id="m-vehicle">
+        <option>Sedán Premium</option><option>SUV Ejecutiva</option><option>Van de Lujo</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="t-btn" onclick="closeModal()">Cancelar</button>
+      <button class="t-btn primary" onclick="saveNewOrder()">Guardar Pedido</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ STATE ══
+let orders = [
+  {id:'ER-001',name:'Martina García',phone:'+54 9 11 2233 4455',date:'2026-04-02',time:'08:30',origin:'Palermo, CABA',dest:'Ezeiza - Aeropuerto',vehicle:'SUV Ejecutiva',fare:4200,status:'confirmed',extras:'✈️ Aeropuerto'},
+  {id:'ER-002',name:'Roberto Sanz',phone:'+54 9 11 5566 7788',date:'2026-04-02',time:'11:00',origin:'Recoleta, CABA',dest:'Nordelta, Tigre',vehicle:'Sedán Premium',fare:3100,status:'pending',extras:''},
+  {id:'ER-003',name:'Valeria López',phone:'+54 9 11 8899 0011',date:'2026-04-02',time:'15:45',origin:'Puerto Madero',dest:'Pilar, Bs.As.',vehicle:'Van de Lujo',fare:5800,status:'pending',extras:'🥂 Bebidas, 🎵 Música'},
+  {id:'ER-004',name:'Diego Herrera',phone:'+54 9 11 1122 3344',date:'2026-04-01',time:'09:00',origin:'Caballito, CABA',dest:'La Plata Centro',vehicle:'Sedán Premium',fare:2800,status:'completed',extras:''},
+  {id:'ER-005',name:'Sofía Méndez',phone:'+54 9 11 4455 6677',date:'2026-04-01',time:'18:30',origin:'Belgrano, CABA',dest:'Tigre Puerto',vehicle:'SUV Ejecutiva',fare:3600,status:'completed',extras:'📶 WiFi'},
+  {id:'ER-006',name:'Carlos Pinto',phone:'+54 9 11 7788 9900',date:'2026-03-31',time:'07:00',origin:'San Isidro',dest:'Ministro Pistarini',vehicle:'Sedán Premium',fare:3900,status:'cancelled',extras:''},
+];
+
+let pricing = [
+  {key:'sedan', icon:'🚗', name:'Sedán Premium', cap:'1–4 pasajeros', base:1800, perKm:80,  color:'#C9A84C'},
+  {key:'suv',   icon:'🚙', name:'SUV Ejecutiva',  cap:'1–6 pasajeros', base:2600, perKm:100, color:'#5A9BE0'},
+  {key:'van',   icon:'🚐', name:'Van de Lujo',    cap:'1–9 pasajeros', base:3800, perKm:120, color:'#5AE09A'},
+];
+
+let selectedVehicleData = {name:'Sedán Premium', base:1800, perKm:80};
+let selectedDate = '';
+let calcDist = 0;
+let currentFilter = 'all';
+let activeConv = 0;
+
+// ══ LOGIN ══
+function doLogin(){
+  const u=document.getElementById('loginUser').value;
+  const p=document.getElementById('loginPass').value;
+  if(u==='admin'&&p==='1234'){
+    document.getElementById('loginOverlay').style.display='none';
+    init();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+document.getElementById('loginPass').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
+
+// ══ INIT ══
+function init(){
+  buildMiniCal();
+  renderCalendar();
+  renderOrders();
+  renderConvList();
+  renderPricingCards();
+}
+
+// ══ PRICING PANEL ══
+function renderPricingCards(){
+  const wrap = document.getElementById('pricingCards');
+  if(!wrap) return;
+  wrap.innerHTML = pricing.map(p => `
+    <div style="background:var(--surface);border:1px solid var(--border);padding:24px;position:relative;overflow:hidden;">
+      <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,${p.color},transparent);"></div>
+      <div style="font-size:1.8rem;margin-bottom:10px;">${p.icon}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;margin-bottom:3px;">${p.name}</div>
+      <div style="font-size:.62rem;color:var(--muted);letter-spacing:.1em;margin-bottom:20px;">${p.cap}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <label style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:${p.color};">Tarifa base $</label>
+          <input id="price-base-${p.key}" type="number" value="${p.base}" min="0" step="100"
+            style="width:100%;background:var(--dark);border:1px solid var(--border);color:var(--text);padding:9px 12px;font-family:'Raleway',sans-serif;font-size:.85rem;outline:none;margin-top:6px;transition:border-color .2s;"
+            onfocus="this.style.borderColor='${p.color}'" onblur="this.style.borderColor='rgba(201,168,76,0.12)'"
+            oninput="previewFare('${p.key}')" />
+        </div>
+        <div>
+          <label style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:${p.color};">Precio / km $</label>
+          <input id="price-km-${p.key}" type="number" value="${p.perKm}" min="0" step="10"
+            style="width:100%;background:var(--dark);border:1px solid var(--border);color:var(--text);padding:9px 12px;font-family:'Raleway',sans-serif;font-size:.85rem;outline:none;margin-top:6px;transition:border-color .2s;"
+            onfocus="this.style.borderColor='${p.color}'" onblur="this.style.borderColor='rgba(201,168,76,0.12)'"
+            oninput="previewFare('${p.key}')" />
+        </div>
+      </div>
+      <div id="fare-preview-${p.key}" style="margin-top:14px;padding:10px 12px;background:var(--dark);border:1px solid rgba(201,168,76,0.08);font-size:.68rem;color:var(--muted2);">
+        Ej. 20 km → <strong style="color:${p.color};">$${(p.base + 20*p.perKm).toLocaleString('es-AR')}</strong>
+        &nbsp;|&nbsp; 40 km → <strong style="color:${p.color};">$${(p.base + 40*p.perKm).toLocaleString('es-AR')}</strong>
+      </div>
+    </div>`).join('');
+}
+
+function previewFare(key){
+  const p = pricing.find(x=>x.key===key);
+  const base = parseInt(document.getElementById('price-base-'+key).value)||0;
+  const km   = parseInt(document.getElementById('price-km-'+key).value)||0;
+  const prev = document.getElementById('fare-preview-'+key);
+  prev.innerHTML = `Ej. 20 km → <strong style="color:${p.color};">$${(base+20*km).toLocaleString('es-AR')}</strong>
+    &nbsp;|&nbsp; 40 km → <strong style="color:${p.color};">$${(base+40*km).toLocaleString('es-AR')}</strong>`;
+}
+
+function savePricing(){
+  pricing.forEach(p=>{
+    const base = parseInt(document.getElementById('price-base-'+p.key).value)||0;
+    const km   = parseInt(document.getElementById('price-km-'+p.key).value)||0;
+    p.base  = base;
+    p.perKm = km;
+  });
+  // Sync selected vehicle if open
+  const match = pricing.find(p=>p.name===selectedVehicleData.name);
+  if(match){ selectedVehicleData.base=match.base; selectedVehicleData.perKm=match.perKm; }
+  // Update vehicle buttons in booking
+  updateMapCalc();
+  showToast('✅ Tarifas actualizadas correctamente');
+}
+
+// ══ TABS ══
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══ VEHICLE ══
+function selectVehicle(el,name){
+  document.querySelectorAll('.vc').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const p = pricing.find(x=>x.name===name) || {name,base:1800,perKm:80};
+  selectedVehicleData = {name:p.name, base:p.base, perKm:p.perKm};
+  document.getElementById('vehicle-name-display').textContent=name;
+  updateMapCalc();
+}
+
+// ══ MINI CALENDAR ══
+function buildMiniCal(){
+  const wrap=document.getElementById('miniCal');
+  wrap.innerHTML='';
+  const today=new Date();
+  const days=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  for(let i=0;i<10;i++){
+    const d=new Date(today);d.setDate(today.getDate()+i);
+    const key=d.toISOString().split('T')[0];
+    const div=document.createElement('div');
+    div.className='cal-day'+(i===0?' selected':'');
+    const busy=orders.filter(o=>o.date===key&&o.status!=='cancelled').length;
+    div.innerHTML=`<div class="dow">${days[d.getDay()]}</div><div class="dom">${d.getDate()}</div><div class="slots">${busy?busy+' viaje'+(busy>1?'s':''):''}</div>`;
+    div.onclick=()=>{
+      document.querySelectorAll('.cal-day').forEach(x=>x.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedDate=key;
+      updateMapCalc();
+    };
+    if(i===0) selectedDate=key;
+    wrap.appendChild(div);
+  }
+}
+
+// ══ MAP SIMULATION ══
+const addressSuggestions = [
+  'Av. Santa Fe 1234, Palermo','Av. Corrientes 2500, Almagro','Av. del Libertador 5000, Nuñez',
+  'Recoleta, CABA','Puerto Madero, CABA','Ezeiza - Aeropuerto Internacional',
+  'Pilar Centro, Bs.As.','Nordelta, Tigre','La Plata Centro','San Isidro, GBA'
+];
+
+function showSuggestions(id,val){
+  const el=document.getElementById(id);
+  if(!val||val.length<2){el.classList.remove('show');return;}
+  const filtered=addressSuggestions.filter(a=>a.toLowerCase().includes(val.toLowerCase()));
+  if(!filtered.length){el.classList.remove('show');return;}
+  el.innerHTML=filtered.slice(0,4).map(s=>`<div class="sug-item" onmousedown="selectAddr('${id}','${s}')">${s}</div>`).join('');
+  el.classList.add('show');
+}
+function selectAddr(sugId,val){
+  const input=sugId==='sug-origin'?document.getElementById('f-origin'):document.getElementById('f-dest');
+  input.value=val;
+  document.getElementById(sugId).classList.remove('show');
+  updateMapCalc();
+}
+function hideSug(id){setTimeout(()=>{const e=document.getElementById(id);if(e)e.classList.remove('show');},200);}
+
+function updateMapCalc(){
+  const o=document.getElementById('f-origin').value;
+  const d=document.getElementById('f-dest').value;
+  if(o&&d){
+    // Simulación de distancia basada en texto
+    const seed=(o.length*7+d.length*13)%40+8;
+    calcDist=seed;
+    const mins=Math.round(calcDist*2.8);
+    const fare=Math.round(selectedVehicleData.base+calcDist*selectedVehicleData.perKm);
+    document.getElementById('mapDist').textContent=calcDist+' km';
+    document.getElementById('mapTime').textContent=mins+' min';
+    document.getElementById('mapFare').textContent='$'+fare.toLocaleString('es-AR');
+    document.getElementById('price-display').textContent=fare.toLocaleString('es-AR');
+    document.getElementById('price-breakdown').textContent=`Base: $${selectedVehicleData.base.toLocaleString('es-AR')} + ${calcDist}km × $${selectedVehicleData.perKm}`;
+    document.getElementById('pinDest').style.display='block';
+    document.getElementById('mapRoute').style.width=`${40+Math.random()*20}%`;
+  }
+}
+document.getElementById('f-origin').addEventListener('input',updateMapCalc);
+document.getElementById('f-dest').addEventListener('input',updateMapCalc);
+
+// ══ EXTRAS ══
+function toggleExtra(el){el.classList.toggle('active');}
+function getExtras(){return[...document.querySelectorAll('.xtag.active')].map(e=>e.textContent.trim()).join(', ');}
+
+// ══ WHATSAPP ══
+function sendWhatsApp(){
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const time=document.getElementById('f-time').value;
+  const origin=document.getElementById('f-origin').value.trim();
+  const dest=document.getElementById('f-dest').value.trim();
+  const pax=document.getElementById('f-pax').value;
+  const tipo=document.getElementById('f-type').value;
+  const notes=document.getElementById('f-notes').value.trim();
+  const extras=getExtras();
+  const fare=document.getElementById('price-display').textContent;
+  const dist=document.getElementById('mapDist').textContent;
+  const ttime=document.getElementById('mapTime').textContent;
+
+  if(!name||!phone||!origin||!dest){showToast('⚠️ Completá todos los campos requeridos.');return;}
+
+  const id='ER-'+String(orders.length+1).padStart(3,'0');
+  orders.unshift({id,name,phone,date:selectedDate,time,origin,dest,vehicle:selectedVehicleData.name,
+    fare:parseInt(fare.replace(/\D/g,''))||selectedVehicleData.base,status:'pending',extras});
+
+  let msg=`🚗 *ÉLITE RIDES — Pedido ${id}*\n\n`;
+  msg+=`👤 *Cliente:* ${name}\n📱 *Tel:* ${phone}\n`;
+  msg+=`🚙 *Vehículo:* ${selectedVehicleData.name}\n👥 *Pasajeros:* ${pax}\n`;
+  msg+=`📅 *Fecha:* ${selectedDate} · ${time} hs\n`;
+  msg+=`🗺️ *Tipo:* ${tipo}\n📍 *Origen:* ${origin}\n🏁 *Destino:* ${dest}\n`;
+  msg+=`📏 *Distancia:* ${dist} · ⏱️ ${ttime}\n`;
+  if(extras) msg+=`✨ *Extras:* ${extras}\n`;
+  if(notes) msg+=`📝 *Notas:* ${notes}\n`;
+  msg+=`\n💰 *Tarifa:* $${fare}\n`;
+  msg+=`\n_Aguardo confirmación. ¡Gracias!_`;
+
+  const waNumber='5491100000000'; // ← Reemplazá con tu número
+  window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  // Agregar a conversaciones del bot
+  addBotConv(name,phone,id);
+  showToast(`✅ Pedido ${id} creado y enviado por WhatsApp`);
+  renderOrders();
+}
+
+// ══ CALENDAR ══
+let calYear=2026, calMonth=3;
+const monthNames=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+function renderCalendar(){
+  document.getElementById('monthLabel').textContent=monthNames[calMonth]+' '+calYear;
+  const body=document.getElementById('calBody');
+  body.innerHTML='';
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const today=new Date();
+  let cells=[];
+  for(let i=first-1;i>=0;i--) cells.push({day:prevDays-i,curr:false});
+  for(let i=1;i<=days;i++) cells.push({day:i,curr:true});
+  while(cells.length%7!==0) cells.push({day:cells.length-days-first+2,curr:false});
+
+  cells.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='cal-cell'+(c.curr?'':' other-month');
+    const dateStr=c.curr?`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(c.day).padStart(2,'0')}`:'';
+    const isToday=c.curr&&c.day===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
+    if(isToday) div.classList.add('today');
+    div.innerHTML=`<div class="cell-num">${c.day}</div>`;
+    if(dateStr){
+      const dayOrders=orders.filter(o=>o.date===dateStr);
+      dayOrders.slice(0,3).forEach(o=>{
+        const ev=document.createElement('div');
+        ev.className=`cell-event ${o.status}`;
+        ev.textContent=`${o.time} ${o.name.split(' ')[0]}`;
+        div.appendChild(ev);
+      });
+      div.onclick=()=>showDayDetail(dateStr,c.day);
+    }
+    body.appendChild(div);
+  });
+}
+
+function showDayDetail(dateStr,day){
+  document.querySelectorAll('.cal-cell').forEach(c=>c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const dayOrders=orders.filter(o=>o.date===dateStr);
+  document.getElementById('ddTitle').textContent=`${day} de ${monthNames[calMonth]}`;
+  document.getElementById('ddSub').textContent=dayOrders.length?`${dayOrders.length} viaje(s) programado(s)`:'Sin viajes';
+  const evDiv=document.getElementById('ddEvents');
+  evDiv.innerHTML=dayOrders.length?dayOrders.map(o=>`
+    <div class="dd-event">
+      <div class="dd-ev-time">${o.time} hs</div>
+      <div class="dd-ev-name">${o.name}</div>
+      <div class="dd-ev-route">${o.origin} → ${o.dest}</div>
+      <div class="dd-ev-route" style="margin-top:2px;">${o.vehicle} · $${o.fare.toLocaleString('es-AR')}</div>
+      <span class="dd-ev-badge badge-${o.status}">${statusLabel(o.status)}</span>
+    </div>`).join(''):'<div style="color:var(--muted);font-size:.75rem;">No hay viajes este día</div>';
+}
+
+function changeMonth(d){
+  calMonth+=d;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCalendar();
+}
+
+// ══ ADMIN ORDERS ══
+function statusLabel(s){return{pending:'Pendiente',confirmed:'Confirmado',completed:'Completado',cancelled:'Cancelado'}[s]||s;}
+function statusClass(s){return{pending:'sp-pending',confirmed:'sp-confirmed',completed:'sp-completed',cancelled:'sp-cancelled'}[s]||'';}
+
+function renderOrders(){
+  const body=document.getElementById('ordersBody');
+  if(!body)return;
+  const filtered=currentFilter==='all'?orders:orders.filter(o=>o.status===currentFilter);
+  body.innerHTML=filtered.map(o=>`
+    <tr>
+      <td style="color:var(--gold);font-size:.7rem;">${o.id}</td>
+      <td class="name-cell">${o.name}<br><span style="font-size:.65rem;color:var(--muted);">${o.phone}</span></td>
+      <td>${o.date}<br><span style="color:var(--gold)">${o.time} hs</span></td>
+      <td class="route-cell">${o.origin}<br>→ ${o.dest}</td>
+      <td style="font-size:.7rem;">${o.vehicle}</td>
+      <td style="color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.05rem;">$${o.fare.toLocaleString('es-AR')}</td>
+      <td><span class="status-pill ${statusClass(o.status)}">${statusLabel(o.status)}</span></td>
+      <td>
+        ${o.status==='pending'?`<button class="act-btn" onclick="changeOrderStatus('${o.id}','confirmed')">✓ Confirmar</button>`:''}
+        <button class="act-btn wa" onclick="contactClient('${o.id}')">WA</button>
+        ${o.status!=='cancelled'&&o.status!=='completed'?`<button class="act-btn danger" onclick="changeOrderStatus('${o.id}','cancelled')">✕</button>`:''}
+      </td>
+    </tr>`).join('');
+}
+
+function filterOrders(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderOrders();
+}
+
+function changeOrderStatus(id,status){
+  const o=orders.find(x=>x.id===id);
+  if(o){
+    o.status=status;
+    renderOrders();
+    renderCalendar();
+    showToast(`${id} → ${statusLabel(status)}`);
+    if(status==='confirmed') contactClient(id,true);
+  }
+}
+
+function contactClient(id,auto=false){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  const waNumber=o.phone.replace(/\D/g,'');
+  let msg=auto
+    ?`✅ *Hola ${o.name.split(' ')[0]}!* Tu viaje *${id}* está *confirmado*.\n\n📅 ${o.date} a las ${o.time} hs\n📍 ${o.origin} → ${o.dest}\n🚗 ${o.vehicle}\n\n¡Nos vemos pronto! — ÉLITE Rides`
+    :`Hola ${o.name.split(' ')[0]}, te contactamos de ÉLITE Rides sobre tu viaje ${id}.`;
+  window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');
+  showToast(`WhatsApp abierto para ${o.name}`);
+}
+
+function openNewOrder(){
+  const d=new Date();d.setDate(d.getDate()+1);
+  document.getElementById('m-date').value=d.toISOString().split('T')[0];
+  document.getElementById('modalNewOrder').classList.add('show');
+}
+function closeModal(){document.getElementById('modalNewOrder').classList.remove('show');}
+function saveNewOrder(){
+  const name=document.getElementById('m-name').value.trim();
+  const phone=document.getElementById('m-phone').value.trim();
+  const date=document.getElementById('m-date').value;
+  const time=document.getElementById('m-time').value;
+  const origin=document.getElementById('m-origin').value.trim();
+  const dest=document.getElementById('m-dest').value.trim();
+  const vehicle=document.getElementById('m-vehicle').value;
+  if(!name||!origin||!dest){showToast('⚠️ Completá los campos requeridos');return;}
+  const fares={'Sedán Premium':2200,'SUV Ejecutiva':3200,'Van de Lujo':4500};
+  const id='ER-'+String(orders.length+1).padStart(3,'0');
+  orders.unshift({id,name,phone,date,time,origin,dest,vehicle,fare:fares[vehicle]||2200,status:'pending',extras:''});
+  renderOrders();renderCalendar();closeModal();
+  showToast(`✅ Pedido ${id} creado`);
+}
+
+function exportCSV(){
+  const rows=[['ID','Cliente','Teléfono','Fecha','Hora','Origen','Destino','Vehículo','Tarifa','Estado']];
+  orders.forEach(o=>rows.push([o.id,o.name,o.phone,o.date,o.time,o.origin,o.dest,o.vehicle,o.fare,o.status]));
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='elite_rides_pedidos.csv';a.click();
+  showToast('📥 CSV exportado');
+}
+
+// ══ BOT WHATSAPP ══
+const conversations=[
+  {id:0,name:'Martina García',phone:'+54 9 11 2233 4455',avatar:'👩',unread:2,lastMsg:'¿A qué hora llega el chofer?',msgs:[
+    {from:'bot',text:'¡Hola Martina! 👋 Soy el asistente de *ÉLITE Rides*. Tu viaje ER-001 está *confirmado* para hoy a las 08:30 hs.\n¿En qué puedo ayudarte?',time:'08:00'},
+    {from:'user',text:'Quiero saber si el chofer ya está en camino',time:'08:15'},
+    {from:'bot',text:'🚗 Tu chofer *Juan M.* saldrá a buscarle en 20 minutos. Recibirás su número de contacto cuando esté cerca.',time:'08:16'},
+    {from:'user',text:'¿A qué hora llega el chofer?',time:'08:20'},
+  ]},
+  {id:1,name:'Roberto Sanz',phone:'+54 9 11 5566 7788',avatar:'👨',unread:1,lastMsg:'Quiero reservar un viaje',msgs:[
+    {from:'user',text:'Hola! Quiero reservar un viaje',time:'10:30'},
+    {from:'bot',text:'¡Hola Roberto! 👋 Bienvenido a *ÉLITE Rides*.\n¿A dónde necesitás ir?',time:'10:30',options:['Aeropuerto','Centro de CABA','Zona Norte','Otro destino']},
+  ]},
+  {id:2,name:'Valeria López',phone:'+54 9 11 8899 0011',avatar:'👩‍💼',unread:0,lastMsg:'Muchas gracias!',msgs:[
+    {from:'bot',text:'¡Hola Valeria! Tu viaje ER-003 ha sido recibido. ¿Confirmás los detalles?\n\n📅 Hoy 15:45 hs\n📍 Puerto Madero → Pilar\n🚐 Van de Lujo · $5.800',time:'14:00',options:['✅ Confirmar','✏️ Modificar','❌ Cancelar']},
+    {from:'user',text:'✅ Confirmar',time:'14:05'},
+    {from:'bot',text:'✅ ¡Perfecto! Viaje confirmado. Te avisamos cuando el chofer esté en camino. 🚐',time:'14:05'},
+    {from:'user',text:'Muchas gracias!',time:'14:06'},
+  ]},
+];
+
+function renderConvList(){
+  const list=document.getElementById('convList');
+  list.innerHTML=conversations.map(c=>`
+    <div class="bot-conv${c.id===activeConv?' active':''}" onclick="openConv(${c.id})">
+      <div class="conv-avatar">${c.avatar}</div>
+      <div class="conv-info">
+        <div class="conv-name">${c.name}</div>
+        <div class="conv-last">${c.lastMsg}</div>
+      </div>
+      ${c.unread?`<div class="conv-unread">${c.unread}</div>`:''}
+    </div>`).join('');
+}
+
+function openConv(id){
+  activeConv=id;
+  conversations[id].unread=0;
+  renderConvList();
+  const c=conversations[id];
+  document.getElementById('chatAvatar').textContent=c.avatar;
+  document.getElementById('chatName').textContent=c.name+' · '+c.phone;
+  const msgs=document.getElementById('chatMessages');
+  msgs.innerHTML=c.msgs.map(m=>`
+    <div class="msg ${m.from==='bot'?'bot':'user'}">
+      ${m.from==='bot'?'<div class="msg-sender">Bot ÉLITE</div>':''}
+      <div>${m.text.replace(/\*(.*?)\*/g,'<strong>$1</strong>')}</div>
+      ${m.options?`<div class="msg-options">${m.options.map(o=>`<div class="msg-opt" onclick="replyOption('${o}',${id})">${o}</div>`).join('')}</div>`:''}
+      <div class="msg-time">${m.time}</div>
+    </div>`).join('');
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function replyOption(opt,convId){
+  const c=conversations[convId];
+  const now=new Date();
+  const time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  c.msgs.push({from:'user',text:opt,time});
+  c.msgs.push({from:'bot',text:`Entendido: *${opt}*. Un operador te contactará en breve para coordinar los detalles. 🚗`,time});
+  c.lastMsg=opt;
+  openConv(convId);
+}
+
+function sendManualMsg(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text)return;
+  const c=conversations[activeConv];
+  const now=new Date();
+  const time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  c.msgs.push({from:'bot',text:`[Operador manual] ${text}`,time});
+  c.lastMsg=text;input.value='';
+  openConv(activeConv);
+  showToast('Mensaje enviado');
+}
+
+function addBotConv(name,phone,id){
+  const avatars=['🧑','👤','🙋','👩'];
+  conversations.unshift({id:conversations.length,name,phone,avatar:avatars[Math.floor(Math.random()*4)],unread:1,
+    lastMsg:'Nuevo pedido recibido',msgs:[
+      {from:'user',text:`Hola, acabo de reservar el viaje ${id}`,time:new Date().toTimeString().slice(0,5)},
+      {from:'bot',text:`✅ ¡Hola! Recibimos tu pedido *${id}*. Lo estamos procesando y te confirmaremos en breve.\n\n¿Necesitás algo más?`,time:new Date().toTimeString().slice(0,5),options:['Modificar viaje','Cancelar','Estado del pedido']},
+    ]
+  });
+  renderConvList();
+}
+
+function assignHuman(){showToast('🧑 Conversación asignada a operador humano');}
+function openWA(){
+  const c=conversations[activeConv];
+  if(c) window.open(`https://wa.me/${c.phone.replace(/\D/g,'')}?text=Hola%20${c.name.split(' ')[0]}%20de%20ÉLITE%20Rides`,'_blank');
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Close modal on overlay click
+document.getElementById('modalNewOrder').onclick=function(e){if(e.target===this)closeModal();};
+
+// ══════════════════════════════════════════
+// 1. SPLASH SCREEN
+// ══════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('hide');
+      setTimeout(() => splash.remove(), 700);
+    }
+  }, 1800);
+});
+
+// ══════════════════════════════════════════
+// 2. SERVICE WORKER + SYNC EN BACKGROUND
+// ══════════════════════════════════════════
+let swRegistration = null;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      swRegistration = await navigator.serviceWorker.register('./service-worker.js');
+      console.log('[ÉLITE Rides] SW registrado:', swRegistration.scope);
+
+      // Escuchar mensajes del SW (sync completado, etc.)
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'SYNC_COMPLETE') {
+          hideSyncIndicator();
+          showToast('✅ Datos sincronizados correctamente');
+          addNotif('🔄', 'Sincronización completada', 'Los pedidos pendientes fueron enviados.');
+        }
+        if (event.data?.type === 'NEW_ORDER_PUSH') {
+          addNotif('🚗', 'Nuevo pedido recibido', event.data.body || 'Un cliente realizó una reserva.');
+        }
+      });
+
+      // Detectar actualización del SW disponible
+      swRegistration.addEventListener('updatefound', () => {
+        const newWorker = swRegistration.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showToast('🔄 Nueva versión disponible — recargá para actualizar');
+          }
+        });
+      });
+    } catch (err) {
+      console.warn('[ÉLITE Rides] SW error:', err);
+    }
+  });
+}
+
+// Sync en background al volver a tener conexión
+function triggerBackgroundSync() {
+  if (swRegistration && 'sync' in swRegistration) {
+    showSyncIndicator();
+    swRegistration.sync.register('sync-orders')
+      .then(() => console.log('[ÉLITE Rides] Sync registrado'))
+      .catch(err => console.warn('[ÉLITE Rides] Sync error:', err));
+  }
+}
+
+function showSyncIndicator() {
+  document.getElementById('sync-indicator').classList.add('show');
+}
+function hideSyncIndicator() {
+  document.getElementById('sync-indicator').classList.remove('show');
+  setTimeout(() => document.getElementById('sync-indicator').classList.remove('show'), 2000);
+}
+
+// ══════════════════════════════════════════
+// 3. MODO OFFLINE
+// ══════════════════════════════════════════
+function updateOnlineStatus() {
+  const banner = document.getElementById('offline-banner');
+  if (!navigator.onLine) {
+    banner.classList.add('show');
+    addNotif('📡', 'Sin conexión', 'Trabajando en modo offline. Los datos se sincronizarán al reconectarse.');
+  } else {
+    banner.classList.remove('show');
+    if (document._wasOffline) {
+      showToast('✅ Conexión restablecida');
+      triggerBackgroundSync();
+    }
+  }
+  document._wasOffline = !navigator.onLine;
+}
+
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus(); // estado inicial
+
+// ══════════════════════════════════════════
+// 4. NOTIFICACIONES PUSH
+// ══════════════════════════════════════════
+const notifData = [
+  { id: 1, icon: '🚗', title: 'Nuevo pedido — ER-012', desc: 'Carlos M. · Puerto Madero → Ezeiza · 14:30 hs', time: 'hace 2 min', unread: true },
+  { id: 2, icon: '⏰', title: 'Recordatorio de viaje', desc: 'Roberto S. sale en 45 minutos desde Palermo', time: 'hace 18 min', unread: true },
+  { id: 3, icon: '✅', title: 'Viaje ER-010 completado', desc: 'Valeria L. calificó el servicio con 5 estrellas', time: 'hace 1 h', unread: false },
+];
+
+function renderNotifs() {
+  const list = document.getElementById('notif-list');
+  if (!notifData.length) {
+    list.innerHTML = '<div class="notif-empty">Sin notificaciones nuevas</div>';
+    return;
+  }
+  list.innerHTML = notifData.map(n => `
+    <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="readNotif(${n.id})">
+      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-text">
+        <div class="notif-title-text">${n.title}</div>
+        <div class="notif-desc">${n.desc}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+    </div>`).join('');
+  updateNotifBadge();
+}
+
+function updateNotifBadge() {
+  const unread = notifData.filter(n => n.unread).length;
+  const bell = document.getElementById('notifBell');
+  bell.setAttribute('data-count', unread);
+  bell.style.opacity = unread ? '1' : '.5';
+}
+
+function addNotif(icon, title, desc) {
+  notifData.unshift({ id: Date.now(), icon, title, desc, time: 'ahora', unread: true });
+  renderNotifs();
+  // Vibración en móvil (iOS/Android)
+  if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
+}
+
+function readNotif(id) {
+  const n = notifData.find(x => x.id === id);
+  if (n) n.unread = false;
+  renderNotifs();
+}
+
+function clearNotifs() {
+  notifData.forEach(n => n.unread = false);
+  renderNotifs();
+  document.getElementById('notif-panel').classList.remove('show');
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('show');
+}
+
+// Cerrar panel al clickear afuera
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('notif-panel');
+  const bell = document.getElementById('notifBell');
+  if (!panel.contains(e.target) && !bell.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// Pedir permiso de notificaciones push del navegador
+async function requestPushPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      showToast('🔔 Notificaciones activadas');
+      addNotif('🔔', 'Notificaciones activadas', 'Recibirás alertas de nuevos pedidos en tiempo real.');
+    }
+  }
+}
+
+// Enviar notificación nativa del sistema
+function sendNativeNotif(title, body, icon = './icon-192.png') {
+  if (Notification.permission === 'granted') {
+    new Notification(title, { body, icon, badge: icon, vibrate: [100, 50, 100] });
+  }
+}
+
+// Inicializar notificaciones al cargar
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    renderNotifs();
+    requestPushPermission();
+  }, 2000);
+});
+
+// ══════════════════════════════════════════
+// 5. PWA — INSTALACIÓN
+// ══════════════════════════════════════════
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.createElement('div');
+  banner.id = 'pwa-install-banner';
+  banner.innerHTML = `<div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#141414;border:1px solid rgba(201,168,76,0.4);padding:14px 24px;display:flex;align-items:center;gap:16px;font-family:'Raleway',sans-serif;font-size:.72rem;letter-spacing:.1em;color:#F0EAD6;z-index:9998;box-shadow:0 8px 32px rgba(0,0,0,.6);white-space:nowrap;backdrop-filter:blur(12px);"><span style="color:#C9A84C;font-size:1.1rem;">⬇</span><span>Instalá ÉLITE Rides como app</span><button onclick="installPWA()" style="background:#C9A84C;color:#070707;border:none;padding:7px 16px;font-family:'Raleway',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;">Instalar</button><button onclick="document.getElementById('pwa-install-banner').remove()" style="background:none;border:none;color:#6A6460;cursor:pointer;font-size:1rem;padding:0 4px;">✕</button></div>`;
+  document.body.appendChild(banner);
+});
+
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(choice => {
+    if (choice.outcome === 'accepted') {
+      showToast('✅ ¡App instalada correctamente!');
+      addNotif('📱', 'App instalada', 'ÉLITE Rides está lista para usarse sin internet.');
+    }
+    deferredPrompt = null;
+    const b = document.getElementById('pwa-install-banner');
+    if (b) b.remove();
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  showToast('🚗 ÉLITE Rides instalada como app');
+  const b = document.getElementById('pwa-install-banner');
+  if (b) b.remove();
+});
+</script>
+</body>
+</html>
