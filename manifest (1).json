@@ -1,0 +1,43 @@
+{
+  "name": "ÉLITE Rides — Sistema Completo",
+  "short_name": "ÉLITE Rides",
+  "description": "Sistema de reservas y gestión de traslados premium",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070707",
+  "theme_color": "#C9A84C",
+  "lang": "es",
+  "categories": ["business", "travel"],
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Nueva Reserva",
+      "short_name": "Reservar",
+      "description": "Crear una nueva reserva de traslado",
+      "url": "./index.html#booking",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Panel Admin",
+      "short_name": "Admin",
+      "description": "Ver pedidos y estadísticas",
+      "url": "./index.html#admin",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}
